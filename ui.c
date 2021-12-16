@@ -11,8 +11,8 @@ int main() {
   mkfifo("pipe1", 0644);
   mkfifo("pipe2", 0644);
 
-  int pipe1 = open("pipe1", O_RDWR);
-  int pipe2 = open("pipe2", O_RDWR);
+  int pipe1 = open("pipe1", O_WRONLY);
+  int pipe2 = open("pipe2", O_RDONLY);
 
   char input[100];
 
@@ -27,13 +27,15 @@ int main() {
     }
 
     write(pipe1, input, sizeof(input));
-    close(pipe1);
 
     read(pipe2, input, sizeof(input));
     printf("New string: %s\n", input);
-
-    close(pipe2);
   }
+
+  remove("pipe1");
+  remove("pipe2");
+  close(pipe1);
+  close(pipe2);
 
   return 0;
 }
